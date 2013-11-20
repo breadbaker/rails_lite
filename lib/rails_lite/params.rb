@@ -2,17 +2,31 @@ require 'uri'
 require 'debugger'
 
 class Params
-  def initialize(req, route_params)
+  def initialize(req, route_params = nil)
+    @req = req
     @params = {}
-    encode= URI.decode_www_form(req.body)
-    encode.each do |e|
-      keys = parse_key(e[0])
-      @params = add_key(@params,keys,e[1])
-    end
-    p @params
+    if route_params
+      route_params.names.each do |n|
+        n = n.to_sym
+        @params[n] = route_params[n]
+      end
+    end    #
+    # p req.query_str
+    # req.query_string.split('&').reject do |e|
+    #   e == ''
+    # end.each  do |i|
+    #   a = i.split('=')
+    #   p a
+    #   @params[a[0]] = a[1]
+    # end
+  end
+
+  def params
+    @params
   end
 
   def [](key)
+    @params[key]
   end
 
   def add_key(p,e,v)
@@ -26,28 +40,18 @@ class Params
   end
 
   def to_s
+    @params.to_s
   end
 
-  private
 
-  def parse_www_encoded_form(enc)
-    #
-    # [["cat[name]", "a"],
-    # ["cat[owner]", "a"],
-    # ["cat[][color]", "k"],
-    # ["cat[][color]", "e"]]
-    #
-    # >> "123 456 789" =~ /(\d\d)(\d)/
-    # /((w?)[\[?\]?\[?](w?))*/
-    # >> [$1, $2]
-    # => ["12", "3"]
-    #
-    # >> $~.captures
-    # => ["12", "3"]
-    #
-    # # hash = {}
-    # # enc.map
-
+  def parse_www_encoded_form
+    enc = @req.body
+    return unless enc
+    encode= URI.decode_www_form(enc)
+    encode.each do |e|
+      keys = parse_key(e[0])
+      @params = add_key(@params,keys,e[1])
+    end
   end
 
   def parse_key(key)

@@ -6,18 +6,21 @@ require 'active_support/core_ext'
 class ControllerBase
   attr_reader :params
 
-  def initialize(req, res, route_params = '')
-    @params = Params.new(req,route_params)
-    @req = req
-    p ".query #{@req.query}"
-    p ".query_string  #{@req.query_string}"
+  def initialize(req, res, route_params = {})
+    route_params.parse_www_encoded_form
+    @params = route_params
 
-    p @req.path
+
+    @req = req
     @res = res
   end
 
   def session
     @session ||= Session.new(@req)
+  end
+
+  def params
+    @params
   end
 
   def get_binding
@@ -47,5 +50,6 @@ class ControllerBase
   end
 
   def invoke_action(name)
+    self.send(name)
   end
 end

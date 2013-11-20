@@ -17,13 +17,12 @@ class ExampleController < ControllerBase
 
   def new
     page = <<-END
-<form action="/" method="post">
+<form action="/?g=3&h=4" method="post">
   <input type="text" name="cat[name]">
   <input type="text" name="cat[owner]">
   <input type='text' name='cat[][color]'>
   <input type='text' name='cat[][color]'>
-  <input type='text' name='cat[][color][][shade]'>
-  <input type='text' name='cat[][color][][shade]'>
+
 
 
   <input type="submit">
