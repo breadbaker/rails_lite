@@ -21,15 +21,19 @@ A **route** holds a pattern to match to requests, the http verb associated, a co
 
 The **router** holds a list of routes which are initialized through the draw method which takes a proc and evaluates the http verb. The router upon request is able to match it to route.
 
- #Base Controller
+Base Controller
+---------------
 
 The base controller provides access to the session and params and enables rendering.
  
- #Params
+Params
+------
 
 This pulls the query and the body from the XMLHttpRequest.  Recursively goes through the body building a potentially nested hash of parameters.  Then merges this data with query string.
 The ending result being able to call "params"
 
- #Session
+Session
+-------
+
 
 The session class provides interface with the webrick cookie.
